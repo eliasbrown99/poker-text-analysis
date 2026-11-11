@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data
+structure, extraction, and the meaning of the comparisons · Elias Brown</title><meta name="description" content="Web scraping and transcript collection turn unstructured poker text into related SQLite records for exploratory analysis of topics, tone, and advice.">
+<link rel="stylesheet" href="../report.58c509a4c14c.css"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Web scraping, structured data &amp; analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
+<div class="projectbar"><a class="projectname" href="../index.html">From poker text to relational data</a><nav class="site-nav" aria-label="Project"><a href="../index.html">Overview</a><a href="METHODS.html" aria-current="page">Methods &amp; interpretation</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
+<script>
+(() => {
+  const bar = document.querySelector('.projectbar');
+  const updateHeaderHeight = () => document.documentElement.style.setProperty(
+    '--projectbar-height', bar.getBoundingClientRect().height + 'px'
+  );
+  updateHeaderHeight();
+  if ('ResizeObserver' in window) new ResizeObserver(updateHeaderHeight).observe(bar);
+  else window.addEventListener('resize', updateHeaderHeight);
+})();
+</script>
+<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#collect-unstructured-text-for-analysis">Collect unstructured
+text for analysis</a><a href="#preserve-the-source-units">Preserve the source units</a><a href="#treat-extraction-as-a-measurement-step">Treat extraction as a
+measurement step</a><a href="#account-for-row-multiplication">Account for row
+multiplication</a><a href="#read-each-comparison-according-to-its-construction">Read each
+comparison according to its construction</a><a href="#what-would-support-a-stronger-substantive-finding">What would
+support a stronger substantive finding</a></nav></aside>
+<main id="main"><article><h1
+id="data-structure-extraction-and-the-meaning-of-the-comparisons">Data
+structure, extraction, and the meaning of the comparisons</h1>
+<p><strong>Methods and interpretation · Based on the existing
+implementation and saved notebook</strong></p>
+<p>The analysis brings together text that was not originally collected
+under a shared measurement design. Its usefulness depends on preserving
+the source units, making extraction choices visible, and interpreting
+each join correctly.</p>
+<h2 id="collect-unstructured-text-for-analysis">Collect unstructured
+text for analysis</h2>
+<p>The forum collection workflow uses Requests to retrieve board and
+thread pages and Beautiful Soup to parse their HTML. It normalizes
+discussion URLs, extracts the original post and replies, and stores the
+collected material in SQLite. This web-scraping stage produces a source
+record; the later extraction stage interprets the poker content within
+that record.</p>
+<p>The video workflow enumerates videos in a playlist and retrieves
+available transcript segments. It retains raw segments separately from
+text prepared for extraction. The preparation step uses a language model
+to correct transcription errors and attempt to fill gaps, so the
+prepared text is a transformed input rather than a verbatim transcript.
+That distinction adds another source of uncertainty to downstream
+labels.</p>
+<p>The analytical pipeline then turns the two text sources into
+structured entities and measures. The public report describes that
+process without redistributing the collected posts or transcripts.</p>
+<h2 id="preserve-the-source-units">Preserve the source units</h2>
+<div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Intended unit</th>
+<th>Relationship that matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forum discussion</td>
+<td>One collected thread</td>
+<td>May describe more than one hand</td>
+</tr>
+<tr>
+<td>Hand</td>
+<td>One parsed hand account</td>
+<td>Can have several players, replies, and labels</td>
+</tr>
+<tr>
+<td>Player</td>
+<td>One participant record within a hand</td>
+<td>Is linked to that hand rather than treated as a stand-alone
+observation</td>
+</tr>
+<tr>
+<td>Reply</td>
+<td>One extracted comment record</td>
+<td>Multiple replies can attach to one hand</td>
+</tr>
+<tr>
+<td>Strategy label</td>
+<td>A tag associated with a hand or video</td>
+<td>More than one tag can describe the same record</td>
+</tr>
+<tr>
+<td>Video</td>
+<td>One collected video and transcript</td>
+<td>Has a separate set of model-generated descriptors</td>
+</tr>
+</tbody>
+</table></div>
+<p>The forum schema uses separate tables and foreign-key relationships
+to represent these entities. The transcript database stores video
+records and extracted label fields. A bridge table maps observed topic
+labels to a shared vocabulary so that the sources can be compared by
+subject.</p>
+<h2 id="treat-extraction-as-a-measurement-step">Treat extraction as a
+measurement step</h2>
+<p>The pipeline requests structured outputs from a language model and
+writes selected fields into the databases. Forum outputs include
+descriptions of the hand, actions, perceived mistakes, and sentiment.
+Transcript outputs include topic labels, advice density, and overall
+sentiment.</p>
+<p>Requiring JSON makes a response easier to process; it does not
+establish that each classification is correct. Similarly, requesting a
+percentage of advice-bearing transcript lines does not make the model’s
+estimate equivalent to a manually counted and validated proportion.</p>
+<p>The shared label mapping is also model-assisted. It groups labels
+into common categories while retaining the aliases. That is a practical
+integration step, but grouping decisions can affect which records are
+compared. The report does not claim an independently validated taxonomy
+or an annotated accuracy benchmark.</p>
+<h2 id="account-for-row-multiplication">Account for row
+multiplication</h2>
+<figure class="workflow"><div class="grain-example"><div><strong>1 hand</strong><span>The source account</span></div><span class="math-symbol">×</span><div><strong>2 labels</strong><span>Two associated topics</span></div><span class="math-symbol">×</span><div><strong>3 replies</strong><span>Three comments</span></div><span class="math-symbol">=</span><div><strong>6 rows</strong><span>After the two joins</span></div></div><figcaption>Illustrative join example, created for this report. It is not a record from the collected data.</figcaption></figure>
+
+<p>The notebook’s forum helper table joins hand labels to individual
+replies. Counts taken after that join can give a hand more weight when
+it has more replies. They therefore require a different interpretation
+from counts of videos, unique hands, or unique discussion threads.</p>
+<p>The same issue arises when several aliases map to a common topic. The
+final analytical unit must be checked after mapping and joining, rather
+than inferred from the original table names.</p>
+<h2 id="read-each-comparison-according-to-its-construction">Read each
+comparison according to its construction</h2>
+<div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Exploratory view</th>
+<th>What the reviewed calculation uses</th>
+<th>Interpretation limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Topic frequency gap</td>
+<td>Creator-side label rows and forum rows after joining to replies</td>
+<td>Raw differences across differently sized and weighted sources do not
+measure unmet demand</td>
+</tr>
+<tr>
+<td>Tone alignment</td>
+<td>Forum sentiment and a selected matching video for each topic</td>
+<td>The notebook selects one matching video; it does not estimate the
+mean tone of every creator video on that topic</td>
+</tr>
+<tr>
+<td>Advice density and “uptake”</td>
+<td>Model-assigned advice density and forum records sharing a topic</td>
+<td>Shared topics do not establish viewing, adoption, or causation;
+topic overlap also creates dependence</td>
+</tr>
+<tr>
+<td>Reported mistakes</td>
+<td>Presence of an extracted perceived-mistake field</td>
+<td>A populated field is not an independently verified strategic
+error</td>
+</tr>
+<tr>
+<td>Hand-range display</td>
+<td>Described cards linked to a player-position filter</td>
+<td>The query does not independently identify all opening decisions or a
+representative opening range</td>
+</tr>
+</tbody>
+</table></div>
+<p>These limits explain why the reading edition focuses on the pipeline
+and analytical design. It does not relabel the original charts as
+validated findings, and it does not silently substitute a new analysis
+for the submitted work.</p>
+<h2 id="what-would-support-a-stronger-substantive-finding">What would
+support a stronger substantive finding</h2>
+<p>A cross-source claim would need a clearly defined unit, comparable
+denominators, and aggregation that matches the question. Model-generated
+labels would need a review sample or another independent standard. A
+claim about learning would require evidence connecting exposure to the
+instructional material with later behavior.</p>
+<p>Those are requirements for interpreting the existing questions, not
+changes made as part of this report. No scraping, paid model calls,
+database migrations, or analytical reruns were performed to create this
+reading edition.</p>
+<p><a href="../index.html">Return to the project overview</a></p>
+</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor. Report presentation prepared with AI assistance; original code and analytical outputs were not changed.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="../index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>

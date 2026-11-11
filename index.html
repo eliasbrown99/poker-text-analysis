@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From poker
+discussions to structured analytical data · Elias Brown</title><meta name="description" content="Web scraping and transcript collection turn unstructured poker text into related SQLite records for exploratory analysis of topics, tone, and advice.">
+<link rel="stylesheet" href="report.58c509a4c14c.css"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Web scraping, structured data &amp; analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
+<div class="projectbar"><a class="projectname" href="index.html">From poker text to relational data</a><nav class="site-nav" aria-label="Project"><a href="index.html" aria-current="page">Overview</a><a href="docs/METHODS.html">Methods &amp; interpretation</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
+<script>
+(() => {
+  const bar = document.querySelector('.projectbar');
+  const updateHeaderHeight = () => document.documentElement.style.setProperty(
+    '--projectbar-height', bar.getBoundingClientRect().height + 'px'
+  );
+  updateHeaderHeight();
+  if ('ResizeObserver' in window) new ResizeObserver(updateHeaderHeight).observe(bar);
+  else window.addEventListener('resize', updateHeaderHeight);
+})();
+</script>
+<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#collect-and-structure-the-source-material">Collect and structure
+the source material</a><a href="#two-sources-different-units">Two sources, different units</a><a href="#what-i-built">What I built</a><a href="#the-central-analytical-issue-is-what-a-row-represents">The
+central analytical issue is what a row represents</a><a href="#what-the-project-demonstrates">What the project
+demonstrates</a><a href="#contribution-and-scope">Contribution and scope</a></nav></aside>
+<main id="main"><article><h1 id="from-poker-discussions-to-structured-analytical-data">From poker
+discussions to structured analytical data</h1>
+<p><strong>Elias Brown · Web scraping, unstructured-to-structured data,
+SQLite, and exploratory analysis · Coursework</strong></p>
+<p>This project uses web scraping and transcript collection to
+investigate poker discussions and instructional videos. I turned
+unstructured text into structured records, linked the two sources
+through shared strategy topics, and used SQL and exploratory analysis to
+examine topic frequency, tone, and advice-related measures.</p>
+<p>I was the sole contributor. My work covered collection, text
+processing, language-model extraction, SQLite database design, topic
+mapping, and analysis. The resulting pipeline made narrative material
+queryable while retaining the relationships among discussions, hands,
+players, replies, and labels.</p>
+<h2 id="collect-and-structure-the-source-material">Collect and structure
+the source material</h2>
+<p>The forum scraper used Python, Requests, and Beautiful Soup to
+navigate board pages, identify discussion links, and extract posts and
+replies. A separate workflow collected video transcripts and prepared
+them for extraction. The two sources began as text written or spoken for
+people, rather than as consistent analytical tables.</p>
+<p>Language-model extraction converted that text into fields describing
+hands, participants, actions, strategy topics, sentiment, and advice.
+Relational tables and a shared topic mapping then connected those
+records for analysis. The methods explain where collection,
+model-generated labels, and joins affect the interpretation.</p>
+<h2 id="two-sources-different-units">Two sources, different units</h2>
+<p>The forum pipeline separates discussions, described hands, players,
+replies, strategy labels, and betting-round measures. The transcript
+pipeline stores videos and model-generated labels describing topics,
+advice density, and tone.</p>
+<p>These structures preserve distinctions that matter during analysis. A
+forum thread is not the same unit as a hand; a hand can carry several
+labels; and a video may cover several topics. Joining those tables
+changes the number and meaning of the resulting rows.</p>
+<figure class="workflow"><ol class="process-flow"><li><span class="step-label">01</span><strong>Collect</strong><span>Scrape forum discussions and collect video transcripts.</span></li><li><span class="step-label">02</span><strong>Structure</strong><span>Convert unstructured text into fields and related records.</span></li><li><span class="step-label">03</span><strong>Relate</strong><span>Store entities in SQLite and align topic vocabulary.</span></li><li><span class="step-label">04</span><strong>Analyze</strong><span>Explore topics, tone, and advice with explicit units and limits.</span></li></ol><figcaption>The report describes the existing workflow. No source posts, transcripts, usernames, or individual records are reproduced.</figcaption></figure>
+
+<h2 id="what-i-built">What I built</h2>
+<div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web scraping and transcript collection</td>
+<td>Collect forum posts, replies, and instructional video
+transcripts</td>
+</tr>
+<tr>
+<td>Structured extraction</td>
+<td>Convert narrative material into fields that can be stored and
+queried</td>
+</tr>
+<tr>
+<td>Relational tables</td>
+<td>Keep discussions, hands, participants, replies, and labels
+connected</td>
+</tr>
+<tr>
+<td>A shared label mapping</td>
+<td>Relate differently worded topic labels across the two sources</td>
+</tr>
+<tr>
+<td>An exploratory notebook</td>
+<td>Examine topic frequency, tone, advice-related measures, and
+described outcomes</td>
+</tr>
+</tbody>
+</table></div>
+<p>The database work provides a way to trace an analytical row back to
+its source record within the private project. The public reading edition
+contains no copied posts, transcripts, usernames, or row-level
+records.</p>
+<h2 id="the-central-analytical-issue-is-what-a-row-represents">The
+central analytical issue is what a row represents</h2>
+<p>The saved notebook combines hands, topic labels, and replies. A hand
+with two labels and three replies can contribute six joined rows. That
+is a valid representation for some questions about comments by topic,
+but it is not a count of six separate hands.</p>
+<p>Likewise, a strategy topic appearing in both a video and a forum
+discussion does not demonstrate that the forum participant watched the
+video or adopted its advice. The connection is shared subject matter,
+not an observed learning pathway.</p>
+<p>These distinctions determine how the exploratory charts should be
+read. The original notebook includes comparisons described as frequency
+gaps, tone alignment, and advice uptake. This report treats them as
+exploratory calculations whose units and assumptions need to be
+examined, rather than evidence of unmet instructional demand or learning
+effects.</p>
+<p><a href="docs/METHODS.html">Read the methods and interpretation
+notes</a></p>
+<h2 id="what-the-project-demonstrates">What the project
+demonstrates</h2>
+<p>The work combines web scraping, the conversion of unstructured data
+into structured records, database design, vocabulary alignment, SQL
+joins, exploratory analysis, and visualization. It also makes visible a
+recurring analytical problem: creating a common label does not
+automatically create a comparable measurement.</p>
+<p>The extraction stage uses a language model. Its assessments of tone,
+mistakes, or advice are generated labels, not independent expert
+annotations. A numeric field therefore needs both a clear definition and
+a validation argument before it can support a substantive
+conclusion.</p>
+<h2 id="contribution-and-scope">Contribution and scope</h2>
+<p>I was the sole contributor to the original project. This report was
+prepared with AI assistance from the existing source and saved notebook.
+It does not change the code, rerun extraction, recalculate the analyses,
+or introduce corrected results.</p>
+<p>The original source repository remains private. This public reading
+edition explains the methods and their limits without distributing the
+collected corpus or model-level records. It is a data-analysis case
+study, not an evaluation of profitable poker play.</p>
+</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor. Report presentation prepared with AI assistance; original code and analytical outputs were not changed.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>
