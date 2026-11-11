@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
+<title id="title">How a hand story becomes linked records</title><desc id="desc">An invented story becomes one hand record with related players, betting-round actions and topic tags. Each child record carries the hand ID. The same hand can have multiple tags without being counted as multiple hands.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#86643b"/></marker></defs>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;fill:#302923}.kicker{font-size:12px;letter-spacing:1.5px;font-weight:700;fill:#86643b}.heading{font-family:Georgia,serif;font-size:23px}.body{font-size:16px}.small{font-size:14px;fill:#6e6255}.key{font-size:13px;fill:#526674;font-family:ui-monospace,Consolas,monospace}</style>
+<text x="20" y="25" class="kicker" text-anchor="start">INVENTED HAND STORY</text>
+<rect x="20" y="43" width="840" height="100" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="38" y="75" class="heading" text-anchor="start">A player describes a decision</text>
+<text x="38" y="101" class="body" text-anchor="start">“I raised with ace–ten. One player called. After the first three shared cards,</text>
+<text x="38" y="124" class="body" text-anchor="start">I bet again. They folded.”</text>
+<path d="M 440 143 V 200" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="296.1" y="162" width="287.8" height="20" fill="#f7f2e8"/>
+<text x="440" y="177" class="small" text-anchor="middle">Extract fields and attach a record ID</text>
+<rect x="240" y="205" width="400" height="106" rx="4" fill="#eee5d8" stroke="#86643b"/>
+<text x="258" y="237" class="heading" text-anchor="start">One hand record</text>
+<text x="258" y="263" class="body" text-anchor="start">Player cards: ace–ten</text>
+<text x="258" y="295" class="key" text-anchor="start">id: example-1</text>
+<path d="M 440 311 V 350 H 153 V 390" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 440 311 V 390" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 440 311 V 350 H 727 V 390" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="20" y="395" width="266" height="124" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="38" y="427" class="heading" text-anchor="start">Two participants</text>
+<text x="38" y="453" class="body" text-anchor="start">The player and</text>
+<text x="38" y="476" class="body" text-anchor="start">one opponent</text>
+<text x="38" y="503" class="key" text-anchor="start">hand_id: example-1</text>
+<rect x="307" y="395" width="266" height="124" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="325" y="427" class="heading" text-anchor="start">One betting round</text>
+<text x="325" y="453" class="body" text-anchor="start">Player bets;</text>
+<text x="325" y="476" class="body" text-anchor="start">opponent folds</text>
+<text x="325" y="503" class="key" text-anchor="start">hand_id: example-1</text>
+<rect x="594" y="395" width="266" height="124" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="612" y="427" class="heading" text-anchor="start">Two topic tags</text>
+<text x="612" y="453" class="body" text-anchor="start">One preflop raise</text>
+<text x="612" y="476" class="body" text-anchor="start">Continuation bet on flop</text>
+<text x="612" y="503" class="key" text-anchor="start">hand_id: example-1</text>
+<text x="440" y="550" class="small" text-anchor="middle">The linking ID keeps the story together; two tags still describe one hand.</text>
+</svg>

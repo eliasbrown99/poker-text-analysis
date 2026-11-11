@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Data
-structure, extraction, and the meaning of the comparisons · Elias Brown</title><meta name="description" content="Web scraping and transcript collection turn unstructured poker text into related SQLite records for exploratory analysis of topics, tone, and advice.">
-<link rel="stylesheet" href="../report.58c509a4c14c.css"></head>
+<title>Building the analytical
+dataset · Elias Brown</title><meta name="description" content="An individual Python and SQLite project turns 1,003 poker discussions and 75 video transcripts into linked records, shared topics, and descriptive analysis.">
+<link rel="stylesheet" href="../report.8cef03dfacab.css"></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Web scraping, structured data &amp; analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
-<div class="projectbar"><a class="projectname" href="../index.html">From poker text to relational data</a><nav class="site-nav" aria-label="Project"><a href="../index.html">Overview</a><a href="METHODS.html" aria-current="page">Methods &amp; interpretation</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
+<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Text mining &amp; relational analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
+<div class="projectbar"><a class="projectname" href="../index.html">Poker strategy analysis</a><nav class="site-nav" aria-label="Project"><a href="../index.html">Overview</a><a href="METHODS.html" aria-current="page">Pipeline &amp; methods</a><a href="FINDINGS.html">Findings</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
 <script>
 (() => {
   const bar = document.querySelector('.projectbar');
@@ -17,171 +17,207 @@ structure, extraction, and the meaning of the comparisons · Elias Brown</title>
   else window.addEventListener('resize', updateHeaderHeight);
 })();
 </script>
-<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#collect-unstructured-text-for-analysis">Collect unstructured
-text for analysis</a><a href="#preserve-the-source-units">Preserve the source units</a><a href="#treat-extraction-as-a-measurement-step">Treat extraction as a
-measurement step</a><a href="#account-for-row-multiplication">Account for row
-multiplication</a><a href="#read-each-comparison-according-to-its-construction">Read each
-comparison according to its construction</a><a href="#what-would-support-a-stronger-substantive-finding">What would
-support a stronger substantive finding</a></nav></aside>
-<main id="main"><article><h1
-id="data-structure-extraction-and-the-meaning-of-the-comparisons">Data
-structure, extraction, and the meaning of the comparisons</h1>
-<p><strong>Methods and interpretation · Based on the existing
-implementation and saved notebook</strong></p>
-<p>The analysis brings together text that was not originally collected
-under a shared measurement design. Its usefulness depends on preserving
-the source units, making extraction choices visible, and interpreting
-each join correctly.</p>
-<h2 id="collect-unstructured-text-for-analysis">Collect unstructured
-text for analysis</h2>
-<p>The forum collection workflow uses Requests to retrieve board and
-thread pages and Beautiful Soup to parse their HTML. It normalizes
-discussion URLs, extracts the original post and replies, and stores the
-collected material in SQLite. This web-scraping stage produces a source
-record; the later extraction stage interprets the poker content within
-that record.</p>
-<p>The video workflow enumerates videos in a playlist and retrieves
-available transcript segments. It retains raw segments separately from
-text prepared for extraction. The preparation step uses a language model
-to correct transcription errors and attempt to fill gaps, so the
-prepared text is a transformed input rather than a verbatim transcript.
-That distinction adds another source of uncertainty to downstream
-labels.</p>
-<p>The analytical pipeline then turns the two text sources into
-structured entities and measures. The public report describes that
-process without redistributing the collected posts or transcripts.</p>
-<h2 id="preserve-the-source-units">Preserve the source units</h2>
-<div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
-<thead>
-<tr>
-<th>Entity</th>
-<th>Intended unit</th>
-<th>Relationship that matters</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Forum discussion</td>
-<td>One collected thread</td>
-<td>May describe more than one hand</td>
-</tr>
-<tr>
-<td>Hand</td>
-<td>One parsed hand account</td>
-<td>Can have several players, replies, and labels</td>
-</tr>
-<tr>
-<td>Player</td>
-<td>One participant record within a hand</td>
-<td>Is linked to that hand rather than treated as a stand-alone
-observation</td>
-</tr>
-<tr>
-<td>Reply</td>
-<td>One extracted comment record</td>
-<td>Multiple replies can attach to one hand</td>
-</tr>
-<tr>
-<td>Strategy label</td>
-<td>A tag associated with a hand or video</td>
-<td>More than one tag can describe the same record</td>
-</tr>
-<tr>
-<td>Video</td>
-<td>One collected video and transcript</td>
-<td>Has a separate set of model-generated descriptors</td>
-</tr>
-</tbody>
-</table></div>
-<p>The forum schema uses separate tables and foreign-key relationships
-to represent these entities. The transcript database stores video
-records and extracted label fields. A bridge table maps observed topic
-labels to a shared vocabulary so that the sources can be compared by
-subject.</p>
-<h2 id="treat-extraction-as-a-measurement-step">Treat extraction as a
-measurement step</h2>
-<p>The pipeline requests structured outputs from a language model and
-writes selected fields into the databases. Forum outputs include
-descriptions of the hand, actions, perceived mistakes, and sentiment.
-Transcript outputs include topic labels, advice density, and overall
-sentiment.</p>
-<p>Requiring JSON makes a response easier to process; it does not
-establish that each classification is correct. Similarly, requesting a
-percentage of advice-bearing transcript lines does not make the model’s
-estimate equivalent to a manually counted and validated proportion.</p>
-<p>The shared label mapping is also model-assisted. It groups labels
-into common categories while retaining the aliases. That is a practical
-integration step, but grouping decisions can affect which records are
-compared. The report does not claim an independently validated taxonomy
-or an annotated accuracy benchmark.</p>
-<h2 id="account-for-row-multiplication">Account for row
-multiplication</h2>
-<figure class="workflow"><div class="grain-example"><div><strong>1 hand</strong><span>The source account</span></div><span class="math-symbol">×</span><div><strong>2 labels</strong><span>Two associated topics</span></div><span class="math-symbol">×</span><div><strong>3 replies</strong><span>Three comments</span></div><span class="math-symbol">=</span><div><strong>6 rows</strong><span>After the two joins</span></div></div><figcaption>Illustrative join example, created for this report. It is not a record from the collected data.</figcaption></figure>
+<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#collect-and-prepare-the-text">Collect and prepare the text</a><a href="#convert-narratives-into-related-records">Convert narratives into
+related records</a><a href="#design-the-relational-model">Design the relational model</a><a href="#align-topic-vocabulary">Align topic vocabulary</a><a href="#check-coverage-and-counting">Check coverage and counting</a><a href="#reproduce-the-reading-edition">Reproduce the reading
+edition</a></nav></aside>
+<main id="main"><article><h1 id="building-the-analytical-dataset">Building the analytical
+dataset</h1>
+<p><strong>Collection, structured extraction, relational modeling, and
+reproducible analysis</strong></p>
+<p>The core challenge was to turn poker stories into information that
+could be compared without losing their context. One discussion can
+describe several hands; one hand can involve several players; one video
+can cover several topics. The diagrams below show how the project keeps
+those relationships together. Technical details follow each
+explanation.</p>
+<h2 id="collect-and-prepare-the-text">Collect and prepare the text</h2>
+<p>The forum scraper uses <strong>Requests and Beautiful Soup</strong>
+to navigate a range of board pages, discover thread links, and parse the
+original post and replies. It normalizes URLs around the thread
+identifier and uses a unique URL constraint to avoid storing the same
+discussion twice.</p>
+<p>The HTML contains information that needs deliberate handling. The
+scraper converts suit icons into text, separates quoted material from a
+reply's own content, and records whether the reply came from the
+original poster. It stores the collected text and reply JSON alongside
+the source URL and collection timestamp.</p>
+<p>The video workflow enumerates a playlist, retrieves available
+transcript segments with language fallbacks, and saves the raw segments
+as JSON. A separate preparation step uses GPT-4.1 to correct
+transcription errors and punctuation. Raw and prepared transcripts are
+retained separately. The saved collection contains 75 videos from
+<strong>Live Poker Guide</strong>.</p>
+<details class="method-note"><summary>Collection boundaries</summary><p>The forum scraper follows board pagination; the reviewed implementation does not follow pagination within an individual discussion. The saved corpus is therefore a collection of captured discussions, not a verified census of every reply. Transcript preparation permits filling apparent gaps, so prepared text is a model transformation of the raw transcript. The later video-labeling step uses at most the first 32,000 characters; three stored transcripts exceed that length.</p></details>
 
-<p>The notebook’s forum helper table joins hand labels to individual
-replies. Counts taken after that join can give a hand more weight when
-it has more replies. They therefore require a different interpretation
-from counts of videos, unique hands, or unique discussion threads.</p>
-<p>The same issue arises when several aliases map to a common topic. The
-final analytical unit must be checked after mapping and joining, rather
-than inferred from the original table names.</p>
-<h2 id="read-each-comparison-according-to-its-construction">Read each
-comparison according to its construction</h2>
+<h2 id="convert-narratives-into-related-records">Convert narratives into
+related records</h2>
+<p>Instead of treating an entire discussion as one block of text, the
+project separates who was involved, what happened and which topics
+apply. A shared reference number connects those pieces back to the same
+hand. This simplified example shows the intended transformation.</p>
+<figure class="analysis-figure diagram-figure"><img class="chart-wide" src="../_source/figures/story-to-records.svg" alt="An invented poker story becomes one hand record, linked by an ID to two participants, a betting-round record, and two topic tags. Several related records still describe just one hand."><img class="chart-mobile" src="../_source/figures/story-to-records-mobile.svg" alt="An invented account of raising with ace–ten, betting again, and seeing an opponent fold is separated into a hand, participants, actions, and topic tags. A shared hand ID keeps the pieces connected."><figcaption><strong>Figure M1 · From story to records.</strong> An invented example of the intended representation, not a corpus quotation or a new model response. The example ID is for illustration; stored hand IDs are numeric. Having two topic tags does not turn this into two hands.</figcaption></figure>
+
+<p>The extraction prompts ask o4-mini for structured JSON: named fields
+that the program can read consistently. On the forum side, the output
+describes hands, participants, strategy topics, actions by betting
+round, and comments. It includes position, stack size, shared-card
+patterns, and known private cards. The prompt tells the model to leave
+unknown cards empty and to distinguish applicable from inapplicable
+numerical fields.</p>
+<p>On the video side, extraction assigns a content type, strategy
+topics, an estimate of how much text gives advice, and a sentiment
+label. Requiring JSON gives the loader a consistent representation to
+process; the accuracy of those fields still depends on the model's
+interpretation.</p>
+<p>The implementation also normalizes card notation and JSON-encodes
+composite values before inserting them into SQLite. The later forum
+processor limits concurrent extraction requests to four and commits
+completed threads individually. It records the model and estimated token
+cost per thread and includes handling for rejected inputs. The video
+loader skips videos that already have labels and limits concurrent work
+to five tasks.</p>
+<p>These features show the work involved in running the extraction
+across a collection. The <a
+href="#check-coverage-and-counting">data-quality review below</a>
+describes limitations found in the saved implementation and its
+outputs.</p>
+<h2 id="design-the-relational-model">Design the relational model</h2>
+<p>The forum database has six core tables. <code>threads</code> stores
+the source discussions; <code>hands</code> links extracted hand accounts
+back to their discussion; <code>players</code>, <code>replies</code>,
+<code>street_metrics</code>, and <code>archetypes</code> attach related
+records to a hand. The video database separates collected videos from
+their extracted descriptors.</p>
+<p>Think of the database as linked sets of index cards. A discussion
+card points to its hand accounts; each hand points to its participants,
+comments and actions. A record ID is the reference number that lets the
+program find the matching card. The shared topic dictionary then lets
+the two databases recognize equivalent labels.</p>
+<figure class="analysis-figure diagram-figure"><img class="chart-wide" src="../_source/figures/database-architecture.svg" alt="Database architecture: discussions link to hands, and hands link to players, replies, betting-round actions and topic tags. Videos link to at most one descriptor row. Hand tags and expanded video tags connect through a shared topic mapping to distinct topic counts."><img class="chart-mobile" src="../_source/figures/database-architecture-mobile.svg" alt="The forum database connects threads to hands and four related tables using record IDs. The video database connects videos to descriptors. Topic tags from both sources feed a shared dictionary and comparable counts."><figcaption><strong>Figure M2 · How the records connect.</strong> Simplified actual schemas, with readable names followed by table names. The shared topic mapping contains 284 wording variants and 262 common labels. Connections to that mapping are analytical joins, not declared foreign keys between databases.</figcaption></figure>
+
+<p>This structure keeps the units visible. A player row describes a
+participant in a hand, not a unique person across the corpus. A strategy
+label describes a feature of a hand, not an additional hand. A reply can
+be related to a hand without becoming a new hand-level observation.</p>
+<h2 id="align-topic-vocabulary">Align topic vocabulary</h2>
+<p>The bridge builder gathers labels from both databases and asks a
+model to group equivalent wording into concise canonical topics. For
+example, the stored mapping aligns <code>4bet-pot</code> with
+<code>4-bet-pot</code>, and <code>check-behind-flop</code> with
+<code>check-back-flop</code>. The alias is retained so a grouping can be
+inspected.</p>
+<p>The forum prompt allows an open-ended vocabulary. The video prompt
+supplies 13 example archetypes, and the saved video labels use those 13
+canonical topics. All 13 occur in the forum, whose vocabulary spans 262
+canonical labels. This matters when interpreting overlap: a missing
+video label can reflect the prompt and sample, as well as the underlying
+content.</p>
+<p>The original notebook attaches the forum database to the video
+database in SQLite, expands JSON topic arrays with
+<code>json_each</code>, and joins labels through the bridge. The revised
+analysis retains the saved mapping and gives each hand–topic or
+video–topic pair one contribution to its topic count.</p>
+<h2 id="check-coverage-and-counting">Check coverage and counting</h2>
+<p>The November 2026 reading edition audits the saved data before
+plotting it. It merges only exact duplicate hand records: every stored
+field except the surrogate ID must match, including the source thread.
+One such duplicate is merged, reducing 1,037 stored records to
+<strong>1,036 distinct extracted hand records</strong>. Child
+associations are mapped to the retained ID. This does not establish that
+every remaining account describes a unique real-world hand.</p>
 <div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
 <thead>
 <tr>
-<th>Exploratory view</th>
-<th>What the reviewed calculation uses</th>
-<th>Interpretation limit</th>
+<th>Stage</th>
+<th style="text-align: right;">Records available</th>
+<th>Role in the revised analysis</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Topic frequency gap</td>
-<td>Creator-side label rows and forum rows after joining to replies</td>
-<td>Raw differences across differently sized and weighted sources do not
-measure unmet demand</td>
+<td>Collected forum threads</td>
+<td style="text-align: right;">1,003</td>
+<td>Source inventory</td>
 </tr>
 <tr>
-<td>Tone alignment</td>
-<td>Forum sentiment and a selected matching video for each topic</td>
-<td>The notebook selects one matching video; it does not estimate the
-mean tone of every creator video on that topic</td>
+<td>Threads with extracted hands</td>
+<td style="text-align: right;">982</td>
+<td>Extraction coverage</td>
 </tr>
 <tr>
-<td>Advice density and “uptake”</td>
-<td>Model-assigned advice density and forum records sharing a topic</td>
-<td>Shared topics do not establish viewing, adoption, or causation;
-topic overlap also creates dependence</td>
+<td>Distinct extracted hand records</td>
+<td style="text-align: right;">1,036</td>
+<td>Hand-level base after exact duplicate removal</td>
 </tr>
 <tr>
-<td>Reported mistakes</td>
-<td>Presence of an extracted perceived-mistake field</td>
-<td>A populated field is not an independently verified strategic
-error</td>
+<td>Hand records with topic tags</td>
+<td style="text-align: right;">1,000</td>
+<td>Forum topic denominator</td>
 </tr>
 <tr>
-<td>Hand-range display</td>
-<td>Described cards linked to a player-position filter</td>
-<td>The query does not independently identify all opening decisions or a
-representative opening range</td>
+<td>Collected videos</td>
+<td style="text-align: right;">75</td>
+<td>Source inventory</td>
+</tr>
+<tr>
+<td>Videos with label records</td>
+<td style="text-align: right;">69</td>
+<td>Advice-density and content-type sample</td>
+</tr>
+<tr>
+<td>Videos with topic tags</td>
+<td style="text-align: right;">54</td>
+<td>Video topic denominator</td>
 </tr>
 </tbody>
 </table></div>
-<p>These limits explain why the reading edition focuses on the pipeline
-and analytical design. It does not relabel the original charts as
-validated findings, and it does not silently substitute a new analysis
-for the submitted work.</p>
-<h2 id="what-would-support-a-stronger-substantive-finding">What would
-support a stronger substantive finding</h2>
-<p>A cross-source claim would need a clearly defined unit, comparable
-denominators, and aggregation that matches the question. Model-generated
-labels would need a review sample or another independent standard. A
-claim about learning would require evidence connecting exposure to the
-instructional material with later behavior.</p>
-<p>Those are requirements for interpreting the existing questions, not
-changes made as part of this report. No scraping, paid model calls,
-database migrations, or analytical reruns were performed to create this
-reading edition.</p>
-<p><a href="../index.html">Return to the project overview</a></p>
-</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor. Report presentation prepared with AI assistance; original code and analytical outputs were not changed.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="../index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>
+<p>The remaining 36 hand records and 15 labeled videos without topic
+tags are excluded from topic denominators. Six collected videos have no
+label record. Missing tags are not interpreted as absence of all
+topics.</p>
+<details class="method-note"><summary>Duplicate replies and the original joins</summary><p>The saved replies table contains 13,877 rows but 4,280 distinct combinations of hand, author, text, original-poster flag, and sentiment. The street table contains 8,172 rows but 3,460 distinct full tuples. These are duplication diagnostics, not reconstructed counts of real-world events.</p><p>The later forum loader inserts replies within its betting-round loop. It also inserts topics and betting-round records after the hand loop, using the final hand ID. A synthetic in-memory check reproduced repeated replies and missing child records for earlier hands in a multi-hand input. Historical runs may have used different versions; the audit does not attribute every stored duplicate to a single cause.</p><p>The original notebook's hand/topic/reply helper yields 75,163 rows. The corrected topic analysis avoids that join entirely. It counts 5,063 distinct hand–topic pairs and 230 distinct video–topic pairs. No reply count can increase a hand's weight within a topic. The original loader and data have not been repaired or rerun.</p></details>
+
+<p>For a topic <em>t</em>, the plotted percentage is:</p>
+<div class="formula">100 × records tagged with <em>t</em> ÷ records with at least one topic tag</div>
+
+<p>Records can carry several topics, so the percentages across topics
+can exceed 100% in total. The two source denominators remain separate.
+The advice-density plot uses one stored label record per video, displays
+all 69 estimates, and summarizes them by the model-assigned content
+type.</p>
+<details class="method-note"><summary>How the new figures relate to the original notebook</summary><div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table><thead><tr><th>Original exploration</th><th>Reading-edition treatment</th></tr></thead><tbody><tr><td>Frequency gap</td><td>Replaced with within-source topic percentages using distinct hand/video pairs. No “underserved demand” interpretation.</td></tr><tr><td>Tone alignment</td><td>The original query chooses one matching video per topic. That output is retained in the original notebook but is not presented as a creator-wide average.</td></tr><tr><td>Advice density versus uptake</td><td>Reframed as a distribution of saved advice estimates by video type. No viewing or adoption data were collected.</td></tr><tr><td>Mistake rates and Sankey flows</td><td>Retained as original explorations. Nonempty mistake text is not a verified error, and the Sankey counts hand–topic rows rather than independent hands.</td></tr><tr><td>UTG card heatmap</td><td>Retained in the original files. The query filters position rather than identifying a complete set of opening decisions, so it does not support a population opening-range estimate.</td></tr></tbody></table></div></details>
+
+<h2 id="reproduce-the-reading-edition">Reproduce the reading
+edition</h2>
+<p>The <a href="../_source/scripts/analyze_saved_data.py">new analysis
+script</a> uses the Python standard library. It copies each database and
+any WAL/SHM sidecars to a temporary directory, opens the copies
+read-only, and writes only aggregate outputs to the report package.
+SHA-256 checks verify that the original databases, sidecars, and
+notebook did not change during analysis. The <a
+href="../_source/scripts/test_analysis.py">synthetic checks</a> verify the
+counting rules without accessing the corpus.</p>
+<p>Recomputing from the source requires the private original databases.
+The public <a href="../_source/data/index.html">aggregate data</a> is sufficient to
+reproduce the three analytical charts with the <a
+href="../_source/scripts/plot_report.py">plotting script</a>, Matplotlib, and
+NumPy. The <a href="../_source/scripts/draw_diagrams.py">diagram script</a> uses
+only the Python standard library to draw the three workflow
+explanations. Building the reading pages requires Python 3.10 or newer
+and Pandoc or Quarto. No API key is required for these steps.</p>
+<details class="code"><summary>View code</summary><div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: recompute aggregates if you have the original project locally.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/analyze_saved_data.py <span class="at">--source-root</span> /path/to/304-Final</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify counting rules, redraw figures, and build the reading site.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/test_analysis.py</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/plot_report.py</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/draw_diagrams.py</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/check_site_files.py</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/build_portfolio_site.py</span></code></pre></div></details>
+<p>The report build does not execute the original notebook or extraction
+code. The source databases, notebook, and six original figures remain
+preserved. The new figures and aggregate analysis are a separately
+identified, AI-assisted 2026 extension.</p>
+<p><a href="FINDINGS.html">Read the findings →</a> · <a
+href="../index.html">Return to the overview</a></p>
+</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor, 2025. Reading edition and descriptive reanalysis prepared with AI assistance in 2026; original source files remain preserved.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="../index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>

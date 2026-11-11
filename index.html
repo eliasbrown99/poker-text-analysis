@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>From poker
-discussions to structured analytical data · Elias Brown</title><meta name="description" content="Web scraping and transcript collection turn unstructured poker text into related SQLite records for exploratory analysis of topics, tone, and advice.">
-<link rel="stylesheet" href="report.58c509a4c14c.css"></head>
+<title>Poker strategy: from text
+to analysis · Elias Brown</title><meta name="description" content="An individual Python and SQLite project turns 1,003 poker discussions and 75 video transcripts into linked records, shared topics, and descriptive analysis.">
+<link rel="stylesheet" href="report.8cef03dfacab.css"></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Web scraping, structured data &amp; analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
-<div class="projectbar"><a class="projectname" href="index.html">From poker text to relational data</a><nav class="site-nav" aria-label="Project"><a href="index.html" aria-current="page">Overview</a><a href="docs/METHODS.html">Methods &amp; interpretation</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
+<header class="masthead"><a class="identity" href="https://eliasbrown.io/">ELIAS BROWN <span>Selected analytical work</span></a><div class="masthead-links"><span class="discipline">Text mining &amp; relational analysis</span><a class="home-link" href="https://eliasbrown.io/">← Back to eliasbrown.io</a></div></header>
+<div class="projectbar"><a class="projectname" href="index.html">Poker strategy analysis</a><nav class="site-nav" aria-label="Project"><a href="index.html" aria-current="page">Overview</a><a href="docs/METHODS.html">Pipeline &amp; methods</a><a href="docs/FINDINGS.html">Findings</a><a href="https://github.com/eliasbrown99/poker-text-analysis">Report repository</a></nav></div>
 <script>
 (() => {
   const bar = document.querySelector('.projectbar');
@@ -17,123 +17,137 @@ discussions to structured analytical data · Elias Brown</title><meta name="desc
   else window.addEventListener('resize', updateHeaderHeight);
 })();
 </script>
-<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#collect-and-structure-the-source-material">Collect and structure
-the source material</a><a href="#two-sources-different-units">Two sources, different units</a><a href="#what-i-built">What I built</a><a href="#the-central-analytical-issue-is-what-a-row-represents">The
-central analytical issue is what a row represents</a><a href="#what-the-project-demonstrates">What the project
-demonstrates</a><a href="#contribution-and-scope">Contribution and scope</a></nav></aside>
-<main id="main"><article><h1 id="from-poker-discussions-to-structured-analytical-data">From poker
-discussions to structured analytical data</h1>
-<p><strong>Elias Brown · Web scraping, unstructured-to-structured data,
-SQLite, and exploratory analysis · Coursework</strong></p>
-<p>This project uses web scraping and transcript collection to
-investigate poker discussions and instructional videos. I turned
-unstructured text into structured records, linked the two sources
-through shared strategy topics, and used SQL and exploratory analysis to
-examine topic frequency, tone, and advice-related measures.</p>
-<p>I was the sole contributor. My work covered collection, text
-processing, language-model extraction, SQLite database design, topic
-mapping, and analysis. The resulting pipeline made narrative material
-queryable while retaining the relationships among discussions, hands,
-players, replies, and labels.</p>
-<h2 id="collect-and-structure-the-source-material">Collect and structure
-the source material</h2>
-<p>The forum scraper used Python, Requests, and Beautiful Soup to
-navigate board pages, identify discussion links, and extract posts and
-replies. A separate workflow collected video transcripts and prepared
-them for extraction. The two sources began as text written or spoken for
-people, rather than as consistent analytical tables.</p>
-<p>Language-model extraction converted that text into fields describing
-hands, participants, actions, strategy topics, sentiment, and advice.
-Relational tables and a shared topic mapping then connected those
-records for analysis. The methods explain where collection,
-model-generated labels, and joins affect the interpretation.</p>
-<h2 id="two-sources-different-units">Two sources, different units</h2>
-<p>The forum pipeline separates discussions, described hands, players,
-replies, strategy labels, and betting-round measures. The transcript
-pipeline stores videos and model-generated labels describing topics,
-advice density, and tone.</p>
-<p>These structures preserve distinctions that matter during analysis. A
-forum thread is not the same unit as a hand; a hand can carry several
-labels; and a video may cover several topics. Joining those tables
-changes the number and meaning of the resulting rows.</p>
-<figure class="workflow"><ol class="process-flow"><li><span class="step-label">01</span><strong>Collect</strong><span>Scrape forum discussions and collect video transcripts.</span></li><li><span class="step-label">02</span><strong>Structure</strong><span>Convert unstructured text into fields and related records.</span></li><li><span class="step-label">03</span><strong>Relate</strong><span>Store entities in SQLite and align topic vocabulary.</span></li><li><span class="step-label">04</span><strong>Analyze</strong><span>Explore topics, tone, and advice with explicit units and limits.</span></li></ol><figcaption>The report describes the existing workflow. No source posts, transcripts, usernames, or individual records are reproduced.</figcaption></figure>
+<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections"><a href="#the-analytical-question">The analytical question</a><a href="#from-poker-stories-to-comparable-evidence">From poker stories to
+comparable evidence</a><a href="#a-shared-center-of-attention">A shared center of attention</a><a href="#what-the-work-demonstrates">What the work demonstrates</a><a href="#contribution-and-reading-edition">Contribution and reading
+edition</a></nav></aside>
+<main id="main"><article><h1 id="poker-strategy-from-text-to-analysis">Poker strategy: from text
+to analysis</h1>
+<p><strong>Elias Brown · Python, web scraping, language-model
+extraction, SQLite &amp; visualization · Individual project,
+2025</strong></p>
+<p>When poker players ask for help, are they talking about the same
+situations that strategy videos teach? I built a workflow to explore
+that question: collect the discussions and transcripts, turn their
+stories into organized records, and compare the topics they contain.</p>
+<p>The clearest finding is <strong>shared attention to common betting
+decisions</strong>. Betting again after an earlier raise, responding to
+a re-raise, and playing a pot with one initial raise all feature
+prominently in the saved labels. The data lets us describe that overlap;
+it does not tell us whether watching a video changed anyone's play.</p>
+<p>I was the sole contributor to the original project. My work covered
+collection, transcript preparation, extraction prompts, relational
+database design, topic mapping, SQL analysis, and six exploratory
+visualizations. The resulting data connects a discussion to its hands,
+participants, betting rounds, comments, and strategy labels.</p>
+<div class="stat-grid" aria-label="Project scale"><div><strong>1,003</strong><span>forum threads collected</span></div><div><strong>75</strong><span>video transcripts collected</span></div><div><strong>1,036</strong><span>distinct extracted hand records</span></div><div><strong>5,063</strong><span>hand–topic associations</span></div></div>
 
-<h2 id="what-i-built">What I built</h2>
+<p class="fine-print">Counts describe the saved project data. The reading edition merges one exact duplicate among 1,037 stored hand records. Model-generated fields have not been independently annotated for accuracy.</p>
+
+<h2 id="the-analytical-question">The analytical question</h2>
+<p>The original presentation started with a practical problem: a player
+can follow advice and still struggle to explain a loss, while a creator
+may not know which situations their audience finds confusing. Winning or
+losing a single hand does not, by itself, explain the quality of the
+decision. I wanted to bring the teaching and the players' accounts into
+the same frame.</p>
+<p>Poker discussions describe decisions in context: a player's position,
+the size of the pot, the cards on the board, an opponent's actions, and
+the reasoning behind a call or a fold. Instructional videos describe
+some of the same situations through advice and examples. Both sources
+are rich in detail, but their content begins as narrative text.</p>
+<p>The project asked which situations recur in those sources and how
+they can be compared. Answering that required a way to identify the
+entities inside the text, retain their relationships, and recognize
+differently worded strategy labels as the same topic.</p>
+<p>For a creator, that could help identify discussion examples worth
+addressing in a lesson. For a learner, it could help group similar
+decisions for study. The delivered project builds the data foundation
+and explores the patterns; testing whether those uses improve learning
+would require further work.</p>
+<h2 id="from-poker-stories-to-comparable-evidence">From poker stories to
+comparable evidence</h2>
+<p>The two sources begin in different forms: players recount individual
+decisions, while a creator explains strategy. The workflow preserves
+those differences and gives their topics a common set of names. Follow
+the arrows to see how the sources become comparable.</p>
+<figure class="analysis-figure diagram-figure"><img class="chart-wide" src="_source/figures/project-pipeline.svg" alt="Two parallel paths: 1,003 forum discussions become hand records, while transcripts from 75 videos become video descriptors. Language models extract fields; separate SQLite databases preserve the results. A shared topic dictionary connects the labels for the revised analysis."><img class="chart-mobile" src="_source/figures/project-pipeline-mobile.svg" alt="Forum discussions and video transcripts follow separate preparation and extraction paths, then meet at a shared topic dictionary. The reading edition counts distinct records and draws comparisons from the saved data."><figcaption><strong>Workflow.</strong> Collection, model extraction, storage and topic mapping were part of the original 2025 project. The 2026 analysis at the bottom uses saved data only. It merges one exact duplicate among the 1,037 stored hand records.</figcaption></figure>
+
+<p>The collection stage preserved details that ordinary text extraction
+can lose, including card suits, quoted replies, and whether a comment
+came from the original poster. The database separated hands from
+discussions and players from hands, allowing a thread to describe more
+than one hand and a hand to carry several strategy labels.</p>
+<p><a href="docs/METHODS.html">Explore the pipeline and data model
+→</a></p>
+<h2 id="a-shared-center-of-attention">A shared center of attention</h2>
+<p>Three everyday poker questions connect the two sources: what happens
+after one player raises, after someone raises again, and when the
+earlier raiser bets on the first three shared cards? The corresponding
+topics lead the video sample and also recur in the forum accounts.</p>
 <div class="table-wrap" role="region" aria-label="Data table" tabindex="0"><table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Purpose</th>
+<th>Situation in plain language</th>
+<th style="text-align: right;">Forum hand records</th>
+<th style="text-align: right;">Instructional videos</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Web scraping and transcript collection</td>
-<td>Collect forum posts, replies, and instructional video
-transcripts</td>
+<td>Earlier raiser bets on the flop <em>(continuation bet)</em></td>
+<td style="text-align: right;">520 / 1,000 · <strong>52.0%</strong></td>
+<td style="text-align: right;">37 / 54 · <strong>68.5%</strong></td>
 </tr>
 <tr>
-<td>Structured extraction</td>
-<td>Convert narrative material into fields that can be stored and
-queried</td>
+<td>A pot with a preflop re-raise <em>(three-bet pot)</em></td>
+<td style="text-align: right;">399 / 1,000 · <strong>39.9%</strong></td>
+<td style="text-align: right;">35 / 54 · <strong>64.8%</strong></td>
 </tr>
 <tr>
-<td>Relational tables</td>
-<td>Keep discussions, hands, participants, replies, and labels
-connected</td>
-</tr>
-<tr>
-<td>A shared label mapping</td>
-<td>Relate differently worded topic labels across the two sources</td>
-</tr>
-<tr>
-<td>An exploratory notebook</td>
-<td>Examine topic frequency, tone, advice-related measures, and
-described outcomes</td>
+<td>A pot with one preflop raise <em>(single-raised pot)</em></td>
+<td style="text-align: right;">266 / 1,000 · <strong>26.6%</strong></td>
+<td style="text-align: right;">31 / 54 · <strong>57.4%</strong></td>
 </tr>
 </tbody>
 </table></div>
-<p>The database work provides a way to trace an analytical row back to
-its source record within the private project. The public reading edition
-contains no copied posts, transcripts, usernames, or row-level
-records.</p>
-<h2 id="the-central-analytical-issue-is-what-a-row-represents">The
-central analytical issue is what a row represents</h2>
-<p>The saved notebook combines hands, topic labels, and replies. A hand
-with two labels and three replies can contribute six joined rows. That
-is a valid representation for some questions about comments by topic,
-but it is not a count of six separate hands.</p>
-<p>Likewise, a strategy topic appearing in both a video and a forum
-discussion does not demonstrate that the forum participant watched the
-video or adopted its advice. The connection is shared subject matter,
-not an observed learning pathway.</p>
-<p>These distinctions determine how the exploratory charts should be
-read. The original notebook includes comparisons described as frequency
-gaps, tone alignment, and advice uptake. This report treats them as
-exploratory calculations whose units and assumptions need to be
-examined, rather than evidence of unmet instructional demand or learning
-effects.</p>
-<p><a href="docs/METHODS.html">Read the methods and interpretation
-notes</a></p>
-<h2 id="what-the-project-demonstrates">What the project
-demonstrates</h2>
-<p>The work combines web scraping, the conversion of unstructured data
-into structured records, database design, vocabulary alignment, SQL
-joins, exploratory analysis, and visualization. It also makes visible a
-recurring analytical problem: creating a common label does not
-automatically create a comparable measurement.</p>
-<p>The extraction stage uses a language model. Its assessments of tone,
-mistakes, or advice are generated labels, not independent expert
-annotations. A numeric field therefore needs both a clear definition and
-a validation argument before it can support a substantive
-conclusion.</p>
-<h2 id="contribution-and-scope">Contribution and scope</h2>
-<p>I was the sole contributor to the original project. This report was
-prepared with AI assistance from the existing source and saved notebook.
-It does not change the code, rerun extraction, recalculate the analyses,
-or introduce corrected results.</p>
-<p>The original source repository remains private. This public reading
-edition explains the methods and their limits without distributing the
-collected corpus or model-level records. It is a data-analysis case
-study, not an evaluation of profitable poker play.</p>
-</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor. Report presentation prepared with AI assistance; original code and analytical outputs were not changed.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>
+<p>For example, a continuation bet appears in <strong>about half of the
+labeled hand accounts and about two-thirds of the labeled
+videos</strong>. This is a comparison of how often a topic appears, not
+whether the decision was good or bad.</p>
+<p>The <em>flop</em> is the first three shared cards; <em>preflop</em>
+means before they are dealt. Each record can have several topics. These
+figures describe this collection: the videos come from one channel, and
+the two sources were labeled using different prompts. The findings page
+explains those boundaries alongside each result.</p>
+<p><a href="docs/FINDINGS.html">Read the findings and corrected figures
+→</a></p>
+<h2 id="what-the-work-demonstrates">What the work demonstrates</h2>
+<p>The project combines a custom data collection process with
+domain-specific extraction and relational modeling. It required
+decisions about what to preserve from HTML, how to represent several
+entities within one narrative, how to reconcile topic vocabulary, and
+what an analytical row should represent.</p>
+<p>The original notebook explored topic frequency, tone, advice density,
+perceived mistakes, reported outcomes, and described cards. The updated
+reading edition gives those questions a clearer measurement basis: it
+checks duplicate records and extraction coverage, counts distinct
+entities, and presents three descriptive figures with explicit
+units.</p>
+<h2 id="contribution-and-reading-edition">Contribution and reading
+edition</h2>
+<p><strong>Original work — May 2025:</strong> Elias Brown, sole
+contributor. The project code, databases, notebook, and original figures
+are preserved.</p>
+<p><strong>Reading edition — November 2026:</strong> prepared with AI
+assistance. The new analysis reads temporary copies of the existing
+databases, merges one exact duplicate hand record, and recalculates
+aggregates and figures. It makes no new model calls and does not
+recollect data. The original extraction labels remain unchanged.</p>
+<p>The <a
+href="https://github.com/eliasbrown99/poker-text-analysis">report
+repository</a> is the public reading edition. The collected corpus and
+original source repository remain private. The <a
+href="docs/METHODS.html#reproduce-the-reading-edition">methods and
+reproducibility notes</a> provide the new analysis code, aggregate data,
+and counting rules.</p>
+</article><footer><strong>Elias Brown</strong><p>Original project: Elias Brown, sole contributor, 2025. Reading edition and descriptive reanalysis prepared with AI assistance in 2026; original source files remain preserved.</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="index.html">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>
