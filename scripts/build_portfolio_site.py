@@ -102,6 +102,7 @@ def main():
         repo_label = escape(config.get('repository_label', 'Repository'))
         repo_link = f'<a href="{escape(repo)}">{repo_label}</a>' if repo else ''
         footer = escape(config.get('footer_note', 'Original work and contributions are credited in the report.'))
+        preview = '<div class="preview-note">Review preview · November 2026 reading edition</div>' if config.get('preview') else ''
         return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escape(title)} · Elias Brown</title><meta name="description" content="{escape(config['description'], quote=True)}">
@@ -120,7 +121,7 @@ def main():
   else window.addEventListener('resize', updateHeaderHeight);
 }})();
 </script>
-<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections">{section_links or '<a href="#main">Read the page</a>'}</nav></aside>
+{preview}<div class="layout"><aside class="contents"><p class="eyebrow">ON THIS PAGE</p><nav aria-label="Sections">{section_links or '<a href="#main">Read the page</a>'}</nav></aside>
 <main id="main"><article>{body}</article><footer><strong>Elias Brown</strong><p>{footer}</p><a href="https://eliasbrown.io/">Personal website</a> · <a href="{href(out / 'index.html', current)}">Project overview</a> · <a href="#main">Back to top ↑</a></footer></main></div></body></html>'''
 
     for source, current in pages.items():
@@ -163,3 +164,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

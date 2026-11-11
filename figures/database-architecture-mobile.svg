@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 1205" role="img" aria-labelledby="title desc">
+<title id="title">The database relationships behind the analysis</title><desc id="desc">One forum thread can have many hands. Each hand can have players, replies, street metrics and archetypes. One video has zero or one video_labels row. The analytical topic join uses the archetype_bridge alias mapping; dashed links are analytical joins, not foreign keys.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#86643b"/></marker></defs>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;fill:#302923}.kicker{font-size:12px;letter-spacing:1.5px;font-weight:700;fill:#86643b}.heading{font-family:Georgia,serif;font-size:23px}.body{font-size:16px}.small{font-size:14px;fill:#6e6255}.key{font-size:13px;fill:#526674;font-family:ui-monospace,Consolas,monospace}</style>
+<text x="18" y="23" class="kicker" text-anchor="start">FORUM DATABASE</text>
+<rect x="18" y="40" width="324" height="94" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="36" y="72" class="heading" text-anchor="start">Discussions · threads</text>
+<text x="36" y="98" class="body" text-anchor="start">Post, source URL and reply text</text>
+<text x="36" y="118" class="key" text-anchor="start">id</text>
+<path d="M 180 134 V 183" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="47.19999999999999" y="148" width="265.6" height="20" fill="#f7f2e8"/>
+<text x="180" y="163" class="small" text-anchor="middle">one discussion → many hand records</text>
+<rect x="18" y="188" width="324" height="94" rx="4" fill="#eee5d8" stroke="#86643b"/>
+<text x="36" y="220" class="heading" text-anchor="start">Hand accounts · hands</text>
+<text x="36" y="246" class="body" text-anchor="start">Cards, position and context</text>
+<text x="36" y="266" class="key" text-anchor="start">id · thread_id → threads.id</text>
+<path d="M 180 282 V 331" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="47.19999999999999" y="296" width="265.6" height="20" fill="#f7f2e8"/>
+<text x="180" y="311" class="small" text-anchor="middle">one hand → several related records</text>
+<rect x="18" y="336" width="324" height="183" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="36" y="368" class="heading" text-anchor="start">Related tables</text>
+<text x="36" y="394" class="body" text-anchor="start">players · participants</text>
+<text x="36" y="417" class="body" text-anchor="start">replies · comments and tone</text>
+<text x="36" y="440" class="body" text-anchor="start">street_metrics · actions by round</text>
+<text x="36" y="463" class="body" text-anchor="start">archetypes · strategy topic tags</text>
+<text x="36" y="503" class="key" text-anchor="start">each uses hand_id → hands.id</text>
+<text x="18" y="568" class="kicker" text-anchor="start">VIDEO DATABASE</text>
+<rect x="18" y="585" width="324" height="94" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="36" y="617" class="heading" text-anchor="start">Collected videos · videos</text>
+<text x="36" y="643" class="body" text-anchor="start">Title, URL and transcript</text>
+<text x="36" y="663" class="key" text-anchor="start">video_id</text>
+<path d="M 180 679 V 728" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="39.79999999999998" y="693" width="280.40000000000003" height="20" fill="#f7f2e8"/>
+<text x="180" y="708" class="small" text-anchor="middle">one video → zero or one label record</text>
+<rect x="18" y="733" width="324" height="94" rx="4" fill="#faf6ee" stroke="#d3c6b3"/>
+<text x="36" y="765" class="heading" text-anchor="start">Descriptors · video_labels</text>
+<text x="36" y="791" class="body" text-anchor="start">Type, topic list and advice estimate</text>
+<text x="36" y="811" class="key" text-anchor="start">video_id → videos.video_id</text>
+<path d="M 18 469 H 7 V 930 H 17" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 180 827 V 890" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="73.1" y="848" width="213.8" height="20" fill="#f7f2e8"/>
+<text x="180" y="863" class="small" text-anchor="middle">expand the video topic list</text>
+<rect x="18" y="895" width="324" height="117" rx="4" fill="#eee5d8" stroke="#86643b"/>
+<text x="36" y="927" class="heading" text-anchor="start">Shared topic mapping</text>
+<text x="36" y="953" class="body" text-anchor="start">archetype_bridge</text>
+<text x="36" y="976" class="body" text-anchor="start">Wording variant → common label</text>
+<text x="36" y="996" class="key" text-anchor="start">an analytical join, not a foreign key</text>
+<path d="M 180 1012 V 1061" fill="none" stroke="#86643b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="18" y="1066" width="324" height="117" rx="4" fill="#eee5d8" stroke="#86643b"/>
+<text x="36" y="1098" class="heading" text-anchor="start">Comparable topic counts</text>
+<text x="36" y="1124" class="body" text-anchor="start">One hand–topic pair counts once.</text>
+<text x="36" y="1147" class="body" text-anchor="start">One video–topic pair counts once.</text>
+</svg>

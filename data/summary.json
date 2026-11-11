@@ -1,0 +1,75 @@
+{
+  "edition": "November 2026 descriptive reanalysis of saved May 2025 extraction",
+  "threads": 1003,
+  "threads_with_hand_records": 982,
+  "source_reply_entries": 4665,
+  "stored_hand_records": 1037,
+  "distinct_hand_records": 1036,
+  "exact_duplicate_hand_records_removed": 1,
+  "tagged_hand_records": 1000,
+  "hand_topic_pairs": 5063,
+  "stored_player_records": 4528,
+  "canonical_topics": 262,
+  "aliases": 284,
+  "videos_collected": 75,
+  "videos_labeled": 69,
+  "videos_tagged": 54,
+  "video_topic_pairs": 230,
+  "shared_topics": 13,
+  "creator_count": 1,
+  "segment_counts": {
+    "general_advice": 53,
+    "promo": 3,
+    "storytelling": 2,
+    "hand_review": 11
+  },
+  "advice_summary": [
+    {
+      "segment_type": "general_advice",
+      "videos": 53,
+      "median_estimate": 70,
+      "minimum_estimate": 9,
+      "maximum_estimate": 95
+    },
+    {
+      "segment_type": "hand_review",
+      "videos": 11,
+      "median_estimate": 43,
+      "minimum_estimate": 6,
+      "maximum_estimate": 80
+    },
+    {
+      "segment_type": "promo",
+      "videos": 3,
+      "median_estimate": 15,
+      "minimum_estimate": 0,
+      "maximum_estimate": 35
+    },
+    {
+      "segment_type": "storytelling",
+      "videos": 2,
+      "median_estimate": 2.5,
+      "minimum_estimate": 0,
+      "maximum_estimate": 5
+    }
+  ],
+  "hand_coverage": {
+    "with_players": 1032,
+    "with_topics": 1000,
+    "with_replies": 976,
+    "with_street_metrics": 981
+  },
+  "stored_replies": 13877,
+  "distinct_reply_tuples": 4280,
+  "stored_street_metrics": 8172,
+  "distinct_street_tuples": 3460,
+  "original_forum_join_rows": 75163,
+  "notes": [
+    "Topics and advice estimates are model-generated labels, not human-validated measurements.",
+    "Prevalence denominators include only records with at least one mapped topic.",
+    "Multiple topics per record; percentages do not sum to 100.",
+    "No reply or player join is used to count hand-topic pairs.",
+    "Distinct tuples are an audit diagnostic, not a recovered count of real comments or betting events.",
+    "No model inference, source repair, scraping, or causal inference was performed."
+  ]
+}

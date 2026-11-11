@@ -1,7 +1,7 @@
 {
-  "title": "From poker text to relational data",
-  "category": "Web scraping, structured data & analysis",
-  "description": "Web scraping and transcript collection turn unstructured poker text into related SQLite records for exploratory analysis of topics, tone, and advice.",
+  "title": "Poker strategy analysis",
+  "category": "Text mining & relational analysis",
+  "description": "An individual Python and SQLite project turns 1,003 poker discussions and 75 video transcripts into linked records, shared topics, and descriptive analysis.",
   "repository_url": "https://github.com/eliasbrown99/poker-text-analysis",
   "nav": [
     [
@@ -9,11 +9,17 @@
       "README.md"
     ],
     [
-      "Methods & interpretation",
+      "Pipeline & methods",
       "docs/METHODS.md"
+    ],
+    [
+      "Findings",
+      "docs/FINDINGS.md"
     ]
   ],
-  "footer_note": "Original project: Elias Brown, sole contributor. Report presentation prepared with AI assistance; original code and analytical outputs were not changed.",
+  "footer_note": "Original project: Elias Brown, sole contributor, 2025. Reading edition and descriptive reanalysis prepared with AI assistance in 2026; original source files remain preserved.",
   "markdown_format": "gfm-tex_math_dollars",
-  "repository_label": "Report repository"
+  "repository_label": "Report repository",
+  "preview": false
 }
+
